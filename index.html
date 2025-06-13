@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مولد فهرس البحث المتطور - Ultimate Edition</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- NEW: Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         /* CSS is now significantly simplified, relying on Bootstrap variables and utilities */
@@ -139,32 +141,33 @@
     </style>
 </head>
 <body>
-    <button id="darkModeToggle" class="dark-mode-toggle position-fixed top-0 start-0 m-3 z-3 rounded-pill py-2 px-3 border-0 text-white shadow-sm">
-        🌙 الوضع الليلي
+    <button id="darkModeToggle" class="dark-mode-toggle position-fixed top-0 start-0 m-3 z-3 rounded-pill py-2 px-3 border-0 text-white shadow-sm d-flex align-items-center gap-2">
+        <!-- Icon is now controlled by JS -->
     </button>
 
-    <div class="live-counter position-fixed d-none shadow-sm fw-bold text-white rounded-pill py-2 px-3 z-2" id="liveCounter" style="top: 80px; left: 20px;">
-        📊 العناصر: <span id="counterValue">0</span>
+    <div class="live-counter position-fixed d-none shadow-sm fw-bold text-white rounded-pill py-2 px-3 z-2 d-flex align-items-center gap-2" id="liveCounter" style="top: 80px; left: 20px;">
+        <i class="bi bi-bar-chart-line-fill" aria-hidden="true"></i>
+        <span>العناصر: <span id="counterValue">0</span></span>
     </div>
 
     <div class="container mt-5 pt-4">
-        <h1 class="text-center mb-4 display-6">🔍 مولد فهرس البحث المتطور <span class="badge ultimate-badge align-middle">Ultimate</span></h1>
+        <h1 class="text-center mb-4 display-6"><i class="bi bi-search" aria-hidden="true"></i> مولد فهرس البحث المتطور <span class="badge ultimate-badge align-middle">Ultimate</span></h1>
         
         <div class="row g-4">
             <div class="col-lg-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header bg-transparent">
-                        <h3 class="h5 mb-0">📝 إدخال صفحات الموقع</h3>
+                        <h3 class="h5 mb-0"><i class="bi bi-pencil-square me-2" aria-hidden="true"></i>إدخال صفحات الموقع</h3>
                     </div>
                     <div class="card-body">
                         <!-- NEW: SEO Crawler Section -->
                         <div class="seo-crawler-section rounded-3 p-3 my-3">
-                            <h5 class="h6">🔬 زاحف SEO وتحليل الموقع <span class="badge ultimate-badge">جديد</span></h5>
+                            <h5 class="h6"><i class="bi bi-robot me-2" aria-hidden="true"></i>زاحف SEO وتحليل الموقع <span class="badge ultimate-badge">جديد</span></h5>
                             <div class="input-group">
                                 <input type="url" class="form-control" id="seoCrawlerUrl" placeholder="https://example.com">
                                 <input type="number" class="form-control flex-grow-0" id="seoCrawlerDepth" value="1" min="0" max="5" style="width: 100px;" title="عمق الزحف (0 = الصفحة الحالية فقط)">
                                 <button class="btn btn-dark" id="startCrawlerBtn">
-                                    🚀 زحف وتحليل
+                                    <i class="bi bi-rocket-takeoff-fill me-2" aria-hidden="true"></i>زحف وتحليل
                                 </button>
                             </div>
                             <div class="mt-2">
@@ -176,11 +179,11 @@
 
                         <!-- SPA / Headless Analysis Section -->
                         <div class="spa-section rounded-3 p-3 my-3">
-                            <h5 class="h6">⚡ تحليل مواقع SPA (React/Vue) <span class="badge pro-badge">تجريبي</span></h5>
+                            <h5 class="h6"><i class="bi bi-lightning-charge-fill me-2" aria-hidden="true"></i>تحليل مواقع SPA (React/Vue) <span class="badge pro-badge">تجريبي</span></h5>
                              <div class="input-group">
                                 <input type="url" class="form-control" id="spaUrl" placeholder="https://my-react-app.com">
                                 <button class="btn btn-dark" id="analyzeSpaBtn">
-                                    🔬 تحليل
+                                    <i class="bi bi-binoculars-fill me-2" aria-hidden="true"></i>تحليل
                                 </button>
                             </div>
                             <small class="d-block mt-2 opacity-75">
@@ -190,7 +193,7 @@
 
                         <!-- Robots.txt Section -->
                         <div class="robots-section rounded-3 p-3 my-3">
-                            <h5 class="h6">🤖 استيراد من robots.txt <span class="badge feature-badge">جديد</span></h5>
+                            <h5 class="h6"><i class="bi bi-robot me-2" aria-hidden="true"></i>استيراد من robots.txt <span class="badge feature-badge">جديد</span></h5>
                             <div class="drop-zone rounded-3 p-3 text-center cursor-pointer" id="robotsDropZone">
                                 <p class="mb-1">اسحب وأفلت ملف robots.txt هنا أو انقر للاختيار</p>
                                 <small class="opacity-75">سيتم استخراج الصفحات المستبعدة والمسموحة</small>
@@ -200,7 +203,7 @@
 
                         <!-- Manifest.json Section -->
                         <div class="manifest-section rounded-3 p-3 my-3">
-                            <h5 class="h6">📱 استيراد من manifest.json <span class="badge feature-badge">PWA</span></h5>
+                            <h5 class="h6"><i class="bi bi-pwa me-2" aria-hidden="true"></i>استيراد من manifest.json <span class="badge feature-badge">PWA</span></h5>
                             <div class="drop-zone rounded-3 p-3 text-center cursor-pointer" id="manifestDropZone">
                                 <p class="mb-1">اسحب وأفلت ملف manifest.json هنا أو انقر للاختيار</p>
                                 <small class="opacity-75">سيتم استخراج أسماء الأقسام من تطبيق PWA</small>
@@ -210,7 +213,7 @@
 
                         <!-- Sitemap.xml Section -->
                         <div class="sitemap-section rounded-3 p-3 my-3">
-                            <h5 class="h6">🗺️ استيراد من Sitemap.xml <span class="badge feature-badge">ذكي</span></h5>
+                            <h5 class="h6"><i class="bi bi-map-fill me-2" aria-hidden="true"></i>استيراد من Sitemap.xml <span class="badge feature-badge">ذكي</span></h5>
                             <div class="drop-zone rounded-3 p-3 text-center cursor-pointer" id="sitemapDropZone">
                                 <p class="mb-1">اسحب وأفلت ملف sitemap.xml هنا أو انقر للاختيار</p>
                                 <small class="opacity-75">سيتم استخراج جميع الروابط تلقائياً</small>
@@ -221,7 +224,7 @@
                         <!-- HTML File Analysis Section -->
                         <div class="mb-4">
                             <label class="form-label">
-                                📄 تحليل ملفات HTML <span class="badge feature-badge">محسن</span>
+                                <i class="bi bi-file-earmark-text-fill me-2" aria-hidden="true"></i>تحليل ملفات HTML <span class="badge feature-badge">محسن</span>
                             </label>
                             <div class="file-drop-zone border border-2 border-dashed rounded-3 p-4 text-center bg-body-secondary cursor-pointer" id="fileDropZone">
                                 <p class="mb-1">اسحب وأفلت ملفات HTML هنا أو انقر للاختيار</p>
@@ -239,12 +242,12 @@
                         <!-- Bulk Import Section -->
                         <div class="mb-4">
                             <label class="form-label">
-                                📂 استيراد جماعي <span class="badge feature-badge">محسن</span>
+                                <i class="bi bi-folder2-open me-2" aria-hidden="true"></i>استيراد جماعي <span class="badge feature-badge">محسن</span>
                             </label>
                             <div class="input-group">
                                 <input type="file" class="form-control" id="urlsFileInput" accept=".txt,.json">
                                 <button class="btn btn-outline-primary" id="importUrlsFileBtn">
-                                    📥 استيراد
+                                    <i class="bi bi-download me-2" aria-hidden="true"></i>استيراد
                                 </button>
                             </div>
                         </div>
@@ -282,24 +285,24 @@ services.html
                         </div>
                         
                         <button class="btn btn-primary w-100" id="generateIndexBtn">
-                            🚀 توليد فهرس البحث
+                            <i class="bi bi-rocket-takeoff-fill me-2" aria-hidden="true"></i>توليد فهرس البحث
                         </button>
                         
                         <!-- NEW: Improved Data Management -->
                         <div class="mt-4 border-top pt-3">
-                            <h6 class="h6">🗂️ إدارة المشاريع</h6>
+                            <h6 class="h6"><i class="bi bi-folder-symlink-fill me-2" aria-hidden="true"></i>إدارة المشاريع</h6>
                             <div class="input-group mb-2">
                                 <select class="form-select" id="projectSelector" title="اختر مشروعًا محفوظًا لتحميله">
                                     <option value="">-- اختر مشروعًا --</option>
                                 </select>
-                                <button class="btn btn-outline-danger" id="deleteProjectBtn" title="حذف المشروع المختار من القائمة">🗑️</button>
+                                <button class="btn btn-outline-danger" id="deleteProjectBtn" title="حذف المشروع المختار من القائمة"><i class="bi bi-trash3-fill" aria-hidden="true"></i></button>
                             </div>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="projectNameInput" placeholder="اسم المشروع الحالي أو الجديد">
-                                <button class="btn btn-success" id="saveProjectBtn" title="حفظ البيانات الحالية تحت هذا الاسم">💾 حفظ</button>
+                                <button class="btn btn-success" id="saveProjectBtn" title="حفظ البيانات الحالية تحت هذا الاسم"><i class="bi bi-save-fill me-2" aria-hidden="true"></i>حفظ</button>
                             </div>
                             <div class="d-flex justify-content-center mt-2">
-                                <button class="btn btn-link text-decoration-none btn-sm" id="clearFormBtn">✨ البدء من جديد (مسح الكل)</button>
+                                <button class="btn btn-link text-decoration-none btn-sm" id="clearFormBtn"><i class="bi bi-sparkles me-1" aria-hidden="true"></i>البدء من جديد (مسح الكل)</button>
                             </div>
                             <small class="text-muted d-block mt-1 text-center">تتم إدارة المشاريع وحفظها في متصفحك.</small>
                         </div>
@@ -310,12 +313,12 @@ services.html
             <div class="col-lg-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header bg-transparent">
-                        <h3 class="h5 mb-0">📊 النتائج <span class="badge pro-badge">قابل للتحرير</span></h3>
+                        <h3 class="h5 mb-0"><i class="bi bi-bar-chart-steps me-2" aria-hidden="true"></i>النتائج <span class="badge pro-badge">قابل للتحرير</span></h3>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <!-- Statistics Panel -->
                         <div id="statsPanel" class="d-none rounded-3 p-3 my-3 text-white" style="background: var(--gradient-sitemap);">
-                            <h6 class="h6">📈 إحصائيات داخلية</h6>
+                            <h6 class="h6"><i class="bi bi-graph-up-arrow me-2" aria-hidden="true"></i>إحصائيات داخلية</h6>
                             <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-white border-opacity-25"><span>عدد الصفحات:</span><strong id="statPages">0</strong></div>
                             <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-white border-opacity-25"><span>إجمالي الكلمات المفتاحية:</span><strong id="statKeywords">0</strong></div>
                             <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-white border-opacity-25"><span>الفئات المختلفة:</span><strong id="statCategories">0</strong></div>
@@ -324,7 +327,7 @@ services.html
 
                         <!-- Filter Section -->
                         <div id="filterSection" class="d-none bg-body-secondary border rounded-3 p-3 my-3">
-                            <h6 class="h6 mb-2">🔍 تصفية النتائج</h6>
+                            <h6 class="h6 mb-2"><i class="bi bi-funnel-fill me-2" aria-hidden="true"></i>تصفية النتائج</h6>
                             <div class="input-group">
                                 <select class="form-select" id="categoryFilter"><option value="">جميع الفئات</option></select>
                                 <input type="text" class="form-control" id="keywordFilter" placeholder="بحث بالكلمة المفتاحية">
@@ -334,8 +337,8 @@ services.html
                         <!-- NEW: Selection Controls -->
                         <div id="selectionControls" class="d-none d-flex justify-content-between align-items-center bg-body-tertiary p-2 rounded-top-2 border-bottom">
                             <div>
-                                <button class="btn btn-outline-primary btn-sm" id="selectAllBtn">✓ تحديد الكل</button>
-                                <button class="btn btn-outline-secondary btn-sm" id="deselectAllBtn">✗ إلغاء تحديد الكل</button>
+                                <button class="btn btn-outline-primary btn-sm" id="selectAllBtn"><i class="bi bi-check-all me-2" aria-hidden="true"></i>تحديد الكل</button>
+                                <button class="btn btn-outline-secondary btn-sm" id="deselectAllBtn"><i class="bi bi-x-lg me-2" aria-hidden="true"></i>إلغاء تحديد الكل</button>
                             </div>
                             <span class="text-muted small">تم تحديد: <strong id="selectionCounter">0</strong></span>
                         </div>
@@ -346,10 +349,10 @@ services.html
                         
                         <!-- Enhanced Export Options -->
                         <div id="exportButtons" class="d-none d-flex gap-2 flex-wrap mt-3">
-                            <button class="btn btn-success flex-grow-1" id="downloadJsonBtn">💾 JSON</button>
-                            <button class="btn btn-info flex-grow-1" id="downloadCsvBtn">📊 CSV</button>
-                            <button class="btn btn-warning flex-grow-1" id="downloadZipBtn">📦 ZIP</button>
-                            <button class="btn btn-secondary flex-grow-1" id="toggleCopyBtn">📋 نسخ</button>
+                            <button class="btn btn-success flex-grow-1" id="downloadJsonBtn"><i class="bi bi-filetype-json me-2" aria-hidden="true"></i>JSON</button>
+                            <button class="btn btn-info flex-grow-1" id="downloadCsvBtn"><i class="bi bi-filetype-csv me-2" aria-hidden="true"></i>CSV</button>
+                            <button class="btn btn-warning flex-grow-1" id="downloadZipBtn"><i class="bi bi-file-zip-fill me-2" aria-hidden="true"></i>ZIP</button>
+                            <button class="btn btn-secondary flex-grow-1" id="toggleCopyBtn"><i class="bi bi-clipboard-fill me-2" aria-hidden="true"></i>نسخ</button>
                         </div>
 
                         <!-- ZIP Progress -->
@@ -364,10 +367,10 @@ services.html
                         <div id="copyOptions" class="d-none mt-2 p-3 bg-body-secondary border rounded-3">
                             <h6 class="h6">خيارات النسخ:</h6>
                             <div class="d-grid gap-2">
-                                <button class="btn btn-outline-primary btn-sm" data-copy-type="all">📋 نسخ كامل (JSON)</button>
-                                <button class="btn btn-outline-secondary btn-sm" data-copy-type="titles">📝 نسخ العناوين فقط</button>
-                                <button class="btn btn-outline-info btn-sm" data-copy-type="urls">🔗 نسخ الروابط فقط</button>
-                                <button class="btn btn-outline-success btn-sm" data-copy-type="descriptions">📄 نسخ الأوصاف فقط</button>
+                                <button class="btn btn-outline-primary btn-sm" data-copy-type="all"><i class="bi bi-clipboard-check-fill me-2" aria-hidden="true"></i>نسخ كامل (JSON)</button>
+                                <button class="btn btn-outline-secondary btn-sm" data-copy-type="titles"><i class="bi bi-fonts me-2" aria-hidden="true"></i>نسخ العناوين فقط</button>
+                                <button class="btn btn-outline-info btn-sm" data-copy-type="urls"><i class="bi bi-link-45deg me-2" aria-hidden="true"></i>نسخ الروابط فقط</button>
+                                <button class="btn btn-outline-success btn-sm" data-copy-type="descriptions"><i class="bi bi-card-text me-2" aria-hidden="true"></i>نسخ الأوصاف فقط</button>
                             </div>
                         </div>
                     </div>
@@ -378,7 +381,7 @@ services.html
         <div class="row mt-5">
             <div class="col-12">
                 <div class="alert alert-info">
-                    <h4 class="alert-heading">📖 تعليمات الاستخدام:</h4>
+                    <h4 class="alert-heading"><i class="bi bi-book-half me-2" aria-hidden="true"></i>تعليمات الاستخدام:</h4>
                     <ol class="mb-0">
                         <li><strong>جديد ومحسّن:</strong> استخدم "زاحف SEO" لتحليل موقعك. تابع التقدم عبر بطاقة الحالة المرئية التي تظهر أثناء العملية.</li>
                         <li>استورد البيانات من مواقع SPA، ملفات `robots.txt`، `manifest.json`، `sitemap.xml`، أو ملفات HTML.</li>
@@ -403,7 +406,7 @@ services.html
     <!-- NEW: Crawler Status Indicator -->
     <div id="crawlerStatus" class="d-none position-fixed bottom-0 end-0 m-3 p-3 shadow-lg rounded-3 bg-body-tertiary" style="z-index: 1100; width: 350px;">
         <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="mb-0 fw-bold">🔬 جاري الزحف...</h6>
+            <h6 class="mb-0 fw-bold"><i class="bi bi-robot me-2" aria-hidden="true"></i>جاري الزحف...</h6>
             <button type="button" class="btn-close" id="hideCrawlerStatusBtn" aria-label="Close"></button>
         </div>
         <p class="text-muted small mb-1 text-truncate" id="crawlerCurrentUrl">بدء العملية...</p>
@@ -453,12 +456,17 @@ services.html
 
         function toggleDarkMode() {
             setDarkMode(!isDarkMode);
-            showNotification(isDarkMode ? 'تم تفعيل الوضع الليلي 🌙' : 'تم تفعيل الوضع النهاري ☀️', 'info');
+            const icon = isDarkMode ? `<i class="bi bi-moon-stars-fill me-2" aria-hidden="true"></i>` : `<i class="bi bi-sun-fill me-2" aria-hidden="true"></i>`;
+            showNotification(`${icon} تم تفعيل الوضع ${isDarkMode ? 'الليلي' : 'النهاري'}`, 'info');
         }
         
         function updateDarkModeButton() {
             const button = getEl('darkModeToggle');
-            button.innerHTML = isDarkMode ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
+            if (isDarkMode) {
+                button.innerHTML = `<i class="bi bi-sun-fill" aria-hidden="true"></i> <span class="d-none d-sm-inline">الوضع النهاري</span>`;
+            } else {
+                button.innerHTML = `<i class="bi bi-moon-stars-fill" aria-hidden="true"></i> <span class="d-none d-sm-inline">الوضع الليلي</span>`;
+            }
         }
 
         function getProxyUrl(targetUrl) {
@@ -481,7 +489,7 @@ services.html
 
             const maxDepth = parseInt(getEl('seoCrawlerDepth').value, 10) || 0;
             const origin = new URL(baseUrl).origin;
-            showNotification(`🚀 بدء زحف SEO لـ ${origin}...`, 'info');
+            showNotification(`<i class="bi bi-rocket-takeoff-fill me-2" aria-hidden="true"></i> بدء زحف SEO لـ ${origin}...`, 'info');
 
             // NEW: Crawler Status UI
             const crawlerStatus = getEl('crawlerStatus');
@@ -543,7 +551,7 @@ services.html
                 } catch (error) {
                     console.error(`فشل في جلب ${url}:`, error);
                     brokenLinks.add(url);
-                    showNotification(`⚠️ رابط مكسور أو فشل الاتصال: ${new URL(url).pathname}`, 'warning');
+                    showNotification(`<i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i> رابط مكسور أو فشل الاتصال: ${new URL(url).pathname}`, 'warning');
                 }
                 updateCrawlerUI();
             }
@@ -563,7 +571,7 @@ services.html
             const addedCount = addItemsToIndex(newItems);
             
             if (addedCount > 0) {
-                showNotification(`✅ اكتمل الزحف! تمت إضافة ${addedCount} صفحة جديدة.`, 'success');
+                showNotification(`<i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i> اكتمل الزحف! تمت إضافة ${addedCount} صفحة جديدة.`, 'success');
                 updateAllUI();
                 saveProject(); // Auto-save after successful crawl
             } else if (crawledData.size > 0) {
@@ -571,7 +579,7 @@ services.html
             } else {
                 showNotification('❌ فشل الزحف. لم يتم العثور على أي صفحات قابلة للوصول.', 'danger');
             }
-            if (brokenLinks.size > 0) { showNotification(`🚨 تم العثور على ${brokenLinks.size} رابط داخلي مكسور.`, 'danger', 7000); }
+            if (brokenLinks.size > 0) { showNotification(`<i class="bi bi-exclamation-octagon-fill me-2" aria-hidden="true"></i> تم العثور على ${brokenLinks.size} رابط داخلي مكسور.`, 'danger', 7000); }
             setTimeout(() => { crawlerStatus.classList.add('d-none'); }, 5000);
         }
 
@@ -744,8 +752,13 @@ services.html
             }, {});
 
             const sourceLabels = {
-                'seo_crawler': '🔬 زاحف SEO', 'html_analysis': '📄 تحليل HTML', 'manual': '✏️ إدخال يدوي',
-                'url_generation': '🔗 من الروابط', 'sitemap': '🗺️ من Sitemap', 'robots': '🤖 من robots.txt', 'spa_analysis': '⚡ تحليل SPA'
+                'seo_crawler': `<i class="bi bi-robot me-2" aria-hidden="true"></i>زاحف SEO`,
+                'html_analysis': `<i class="bi bi-file-earmark-code-fill me-2" aria-hidden="true"></i>تحليل HTML`,
+                'manual': `<i class="bi bi-pencil-fill me-2" aria-hidden="true"></i>إدخال يدوي`,
+                'url_generation': `<i class="bi bi-link-45deg me-2" aria-hidden="true"></i>من الروابط`,
+                'sitemap': `<i class="bi bi-map-fill me-2" aria-hidden="true"></i>من Sitemap`,
+                'robots': `<i class="bi bi-robot me-2" aria-hidden="true"></i>من robots.txt`,
+                'spa_analysis': `<i class="bi bi-lightning-charge-fill me-2" aria-hidden="true"></i>تحليل SPA`
             };
 
             resultsDiv.innerHTML = `<h5 class="p-3 pb-0 d-none">تم توليد ${results.length} عنصر:</h5>
@@ -914,7 +927,7 @@ services.html
             if (itemsToDownload.length === 0) return showNotification('لا توجد عناصر للتصدير', 'warning');
             const data = getStrippedIndex(itemsToDownload);
             downloadFile(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), 'search-index.json');
-            showNotification(`تم تحميل ${itemsToDownload.length} عنصر كـ JSON ✅`, 'success');
+            showNotification(`تم تحميل ${itemsToDownload.length} عنصر كـ JSON <i class="bi bi-filetype-json ms-2" aria-hidden="true"></i>`, 'success');
         }
 
         function downloadCSV() {
@@ -922,7 +935,7 @@ services.html
             if (itemsToDownload.length === 0) return showNotification('لا توجد عناصر للتصدير', 'warning');
             const csv = ['ID,العنوان,الرابط,الوصف,الفئة,الكلمات المفتاحية', ...itemsToDownload.map(i => [`"${i.id}"`, `"${i.title.replace(/"/g, '""')}"`, `"${i.url}"`, `"${i.description.replace(/"/g, '""')}"`, `"${i.category || ''}"`, `"${(i.tags || []).join(', ')}"`].join(','))].join('\n');
             downloadFile(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }), 'search-index.csv');
-            showNotification(`تم تحميل ${itemsToDownload.length} عنصر كـ CSV 📊`, 'success');
+            showNotification(`تم تحميل ${itemsToDownload.length} عنصر كـ CSV <i class="bi bi-filetype-csv ms-2" aria-hidden="true"></i>`, 'success');
         }
 
         async function downloadZip() {
@@ -941,7 +954,7 @@ services.html
                 
                 const content = await zip.generateAsync({ type: 'blob' }, (metadata) => { zipProgressBar.style.width = metadata.percent.toFixed(2) + '%'; });
                 downloadFile(content, 'search-index-package.zip');
-                showNotification(`تم تحميل ${itemsToDownload.length} عنصر في حزمة ZIP 📦`, 'success');
+                showNotification(`تم تحميل ${itemsToDownload.length} عنصر في حزمة ZIP <i class="bi bi-file-zip-fill ms-2" aria-hidden="true"></i>`, 'success');
             } catch (error) { showNotification('خطأ في إنشاء ZIP: ' + error.message, 'danger'); } finally { setTimeout(() => zipProgress.classList.add('d-none'), 2000); }
         }
 
@@ -957,7 +970,7 @@ services.html
             };
             const content = dataMap[type]();
             navigator.clipboard.writeText(content).then(() => {
-                showNotification(`تم نسخ بيانات ${itemsToCopy.length} عنصر إلى الحافظة! 📋`, 'success');
+                showNotification(`تم نسخ بيانات ${itemsToCopy.length} عنصر إلى الحافظة! <i class="bi bi-clipboard-check-fill ms-2" aria-hidden="true"></i>`, 'success');
                 getEl('copyOptions').classList.add('d-none');
             }).catch(err => showNotification('فشل النسخ!', 'danger'));
         }
@@ -1024,7 +1037,7 @@ services.html
                     localStorage.setItem(LAST_PROJECT_KEY, projectName);
                     updateAllUI();
                     updateProjectListDropdown();
-                    showNotification(`تم تحميل مشروع "${projectName}"! 📂`, 'info');
+                    showNotification(`تم تحميل مشروع "${projectName}"! <i class="bi bi-folder2-open ms-2" aria-hidden="true"></i>`, 'info');
                 }
             } catch (error) { showNotification('خطأ في تحميل المشروع: ' + error.message, 'warning'); }
         }
@@ -1060,7 +1073,7 @@ services.html
                 
                 localStorage.setItem(LAST_PROJECT_KEY, projectName);
                 updateProjectListDropdown();
-                showNotification(`تم حفظ المشروع "${projectName}" بنجاح! 💾`, 'success');
+                showNotification(`تم حفظ المشروع "${projectName}" بنجاح! <i class="bi bi-save-fill ms-2" aria-hidden="true"></i>`, 'success');
 
             } catch (error) {
                 showNotification('خطأ في حفظ البيانات: قد تكون مساحة التخزين ممتلئة. ' + error.message, 'danger');
@@ -1087,7 +1100,7 @@ services.html
                 }
 
                 updateProjectListDropdown();
-                showNotification(`تم حذف المشروع "${projectName}" بنجاح! 🗑️`, 'success');
+                showNotification(`تم حذف المشروع "${projectName}" بنجاح! <i class="bi bi-trash3-fill ms-2" aria-hidden="true"></i>`, 'success');
             }
         }
 
@@ -1162,7 +1175,7 @@ services.html
                 const newRobotsUrls = lines.filter(l => l.toLowerCase().startsWith('disallow:') || l.toLowerCase().startsWith('allow:')).map(l => l.split(':')[1]?.trim()).filter(Boolean);
                 if (newRobotsUrls.length > 0) {
                     appState.robotsUrls.push(...newRobotsUrls); const urlInput = getEl('urlInput'); urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + newRobotsUrls.join('\n');
-                    showNotification(`تم استخراج ${newRobotsUrls.length} مسار جديد من robots.txt! 🤖`, 'success'); saveProject();
+                    showNotification(`تم استخراج ${newRobotsUrls.length} مسار جديد من robots.txt! <i class="bi bi-robot ms-2" aria-hidden="true"></i>`, 'success'); saveProject();
                 } else { showNotification('لم يتم العثور على مسارات جديدة في ملف robots.txt', 'warning'); }
             } catch (error) { showNotification('خطأ في معالجة ملف robots.txt: ' + error.message, 'danger'); }
         }
@@ -1173,7 +1186,7 @@ services.html
                 const extractedUrls = [ ...(appState.manifestData.icons?.map(i => i.src) || []), ...(appState.manifestData.screenshots?.map(s => s.src) || []), appState.manifestData.start_url, ...(appState.manifestData.shortcuts?.map(s => s.url) || []) ].filter(Boolean);
                 if (extractedUrls.length > 0) {
                     const urlInput = getEl('urlInput'); urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + extractedUrls.join('\n');
-                    showNotification(`تم استخراج ${extractedUrls.length} مسار من manifest.json! 📱`, 'success'); saveProject();
+                    showNotification(`تم استخراج ${extractedUrls.length} مسار من manifest.json! <i class="bi bi-pwa ms-2" aria-hidden="true"></i>`, 'success'); saveProject();
                 } else { showNotification('لم يتم العثور على مسارات صالحة في ملف manifest.json', 'warning'); }
             } catch (error) {
                 if (error instanceof SyntaxError) {
@@ -1195,7 +1208,7 @@ services.html
                     let urls = file.name.endsWith('.json') ? (JSON.parse(content).urls || JSON.parse(content)) : content.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
                     if (Array.isArray(urls) && urls.length > 0) {
                         const urlInput = getEl('urlInput'); urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + urls.join('\n');
-                        showNotification(`تم إضافة ${urls.length} رابط من ${file.name}! 📥`, 'success'); saveProject();
+                        showNotification(`تم إضافة ${urls.length} رابط من ${file.name}! <i class="bi bi-download ms-2" aria-hidden="true"></i>`, 'success'); saveProject();
                     }
                 } catch (error) { showNotification(`خطأ في معالجة ${file.name}: ${error.message}`, 'danger'); }
             }
@@ -1206,8 +1219,11 @@ services.html
             const typeMapping = { 'info': 'bg-info', 'success': 'bg-success', 'warning': 'bg-warning', 'danger': 'bg-danger' };
             const toast = document.createElement('div'); toast.id = toastId; toast.className = `toast align-items-center ${typeMapping[type]} text-white border-0`;
             toast.setAttribute('role', 'alert'); toast.setAttribute('aria-live', 'assertive'); toast.setAttribute('aria-atomic', 'true');
-            // NEW: RTL-aware close button
-            toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 ms-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
+            // IMPROVED: RTL-aware close button layout for better appearance.
+            toast.innerHTML = `<div class="d-flex align-items-center">
+                                 <div class="toast-body flex-grow-1">${message}</div>
+                                 <button type="button" class="btn-close btn-close-white me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+                               </div>`;
             toastContainer.appendChild(toast); const bsToast = new bootstrap.Toast(toast, { delay: duration }); bsToast.show(); toast.addEventListener('hidden.bs.toast', () => toast.remove());
         }
         async function processSitemapFile(file) {
@@ -1217,7 +1233,7 @@ services.html
                 const newSitemapUrls = [...xmlDoc.querySelectorAll('url > loc, sitemap > loc')].map(el => { try { return new URL(el.textContent.trim()).pathname; } catch { return el.textContent.trim(); } }).filter(Boolean);
                 if (newSitemapUrls.length > 0) {
                     appState.sitemapUrls.push(...newSitemapUrls); const urlInput = getEl('urlInput'); urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + newSitemapUrls.join('\n');
-                    showNotification(`تم استخراج ${newSitemapUrls.length} رابط جديد من Sitemap! 🗺️`, 'success'); saveProject();
+                    showNotification(`تم استخراج ${newSitemapUrls.length} رابط جديد من Sitemap! <i class="bi bi-map-fill ms-2" aria-hidden="true"></i>`, 'success'); saveProject();
                 } else { showNotification('لم يتم العثور على روابط جديدة في ملف Sitemap', 'warning'); }
             } catch (error) { showNotification('خطأ في معالجة ملف Sitemap: ' + error.message, 'danger'); }
         }
@@ -1248,13 +1264,13 @@ services.html
         function toggleEdit(itemId) {
             const pageItem = document.querySelector(`[data-id="${itemId}"]`); const editBtn = pageItem.querySelector('.btn-edit');
             const isEditing = editBtn.textContent === 'حفظ'; pageItem.querySelectorAll('.editable-content').forEach(el => el.setAttribute('contenteditable', !isEditing));
-            editBtn.textContent = isEditing ? 'تحرير' : 'حفظ'; editBtn.classList.toggle('btn-outline-secondary', isEditing); editBtn.classList.toggle('btn-success', !isEditing);
+            editBtn.textContent = isEditing ? 'حفظ' : 'تحرير'; editBtn.classList.toggle('btn-outline-secondary', isEditing); editBtn.classList.toggle('btn-success', !isEditing);
             if (isEditing) {
                 const item = appState.searchIndex.find(i => i.id === itemId); if (!item) return;
                 pageItem.querySelectorAll('.editable-content').forEach(el => {
                     const field = el.dataset.field; const value = el.textContent.trim();
                     item[field] = field === 'tags' ? value.split(',').map(t => t.trim()).filter(Boolean) : value;
-                }); showNotification('تم حفظ التعديلات! ✅', 'success'); updateStatistics(); saveProject();
+                }); showNotification('تم حفظ التعديلات! <i class="bi bi-check-lg ms-2" aria-hidden="true"></i>', 'success'); updateStatistics(); saveProject();
             }
         }
         
