@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد فهرس البحث المتطور - Ultimate Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        /* CSS is now significantly simplified, relying on Bootstrap variables and utilities */
+
+        /* Custom properties for reusable gradients */
+        :root {
+            --gradient-sitemap: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-robots: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --gradient-manifest: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --gradient-github: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+            --gradient-feature: linear-gradient(45deg, #28a745, #20c997);
+            --gradient-pro: linear-gradient(45deg, #6f42c1, #e83e8c);
+            --gradient-ultimate: linear-gradient(45deg, #fd7e14, #dc3545);
+            --gradient-dark-toggle: linear-gradient(45deg, #667eea, #764ba2);
+            --gradient-live-counter: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        /* Keep custom styles for components that require unique aesthetics not covered by Bootstrap */
+        
+        .file-drop-zone.dragover {
+            border-color: var(--bs-primary) !important;
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        
+        .url-textarea-drop.dragover {
+            border-color: var(--bs-success) !important;
+            background-color: rgba(var(--bs-success-rgb), 0.1);
+        }
+        
+        /* Custom Badges with Gradients */
+        .badge.feature-badge { background: var(--gradient-feature); }
+        .badge.pro-badge { background: var(--gradient-pro); }
+        .badge.ultimate-badge {
+            background: var(--gradient-ultimate);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--bs-warning-rgb), 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(var(--bs-warning-rgb), 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--bs-warning-rgb), 0); }
+        }
+
+        /* In-place editing styles */
+        .editable-content[contenteditable="true"] {
+            outline: 2px solid var(--bs-primary);
+            background-color: var(--bs-warning-bg-subtle);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            cursor: text;
+        }
+        
+        /* Gradient Sections */
+        .sitemap-section { background: var(--gradient-sitemap); color: white; }
+        .robots-section { background: var(--gradient-robots); color: #333; }
+        .manifest-section { background: var(--gradient-manifest); color: #333; }
+        .github-section { background: var(--gradient-github); color: #333; }
+
+        .drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        .drop-zone:hover {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .robots-section .drop-zone, .manifest-section .drop-zone, .github-section .drop-zone {
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+        .robots-section .drop-zone:hover, .manifest-section .drop-zone:hover, .github-section .drop-zone:hover {
+            border-color: #333;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode-toggle {
+            background: var(--gradient-dark-toggle);
+            transition: all 0.3s ease;
+        }
+        .dark-mode-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .live-counter {
+            background: var(--gradient-live-counter);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <button class="dark-mode-toggle position-fixed top-0 start-0 m-3 z-3 rounded-pill py-2 px-3 border-0 text-white shadow-sm" onclick="toggleDarkMode()">
+        🌙 الوضع الليلي
+    </button>
+
+    <div class="live-counter position-fixed d-none shadow-sm fw-bold text-white rounded-pill py-2 px-3 z-2" id="liveCounter" style="top: 80px; left: 20px;">
+        📊 العناصر: <span id="counterValue">0</span>
+    </div>
+
+    <div class="container mt-5 pt-4">
+        <h1 class="text-center mb-4 display-6">🔍 مولد فهرس البحث المتطور <span class="badge ultimate-badge align-middle">Ultimate</span></h1>
+        
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h3 class="h5 mb-0">📝 إدخال صفحات الموقع</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- GitHub Pages Section -->
+                        <div class="github-section rounded-3 p-3 my-3">
+                            <h5 class="h6">🐙 استيراد من GitHub Pages <span class="badge feature-badge">جديد</span></h5>
+                            <div class="input-group">
+                                <input type="url" class="form-control" id="githubUrl" placeholder="https://username.github.io/repository">
+                                <button class="btn btn-dark" onclick="fetchFromGitHub()">
+                                    🚀 جلب
+                                </button>
+                            </div>
+                            <small class="d-block mt-2 opacity-75">سيتم جلب وتحليل جميع صفحات HTML من الموقع تلقائياً</small>
+                        </div>
+
+                        <!-- Robots.txt Section -->
+                        <div class="robots-section rounded-3 p-3 my-3">
+                            <h5 class="h6">🤖 استيراد من robots.txt <span class="badge feature-badge">جديد</span></h5>
+                            <div class="drop-zone rounded-3 p-3 text-center cursor-pointer" id="robotsDropZone">
+                                <p class="mb-1">اسحب وأفلت ملف robots.txt هنا أو انقر للاختيار</p>
+                                <small class="opacity-75">سيتم استخراج الصفحات المستبعدة والمسموحة</small>
+                                <input type="file" id="robotsFileInput" accept=".txt" class="d-none">
+                            </div>
+                        </div>
+
+                        <!-- Manifest.json Section -->
+                        <div class="manifest-section rounded-3 p-3 my-3">
+                            <h5 class="h6">📱 استيراد من manifest.json <span class="badge feature-badge">PWA</span></h5>
+                            <div class="drop-zone rounded-3 p-3 text-center cursor-pointer" id="manifestDropZone">
+                                <p class="mb-1">اسحب وأفلت ملف manifest.json هنا أو انقر للاختيار</p>
+                                <small class="opacity-75">سيتم استخراج أسماء الأقسام من تطبيق PWA</small>
+                                <input type="file" id="manifestFileInput" accept=".json" class="d-none">
+                            </div>
+                        </div>
+
+                        <!-- Sitemap.xml Section -->
+                        <div class="sitemap-section rounded-3 p-3 my-3">
+                            <h5 class="h6">🗺️ استيراد من Sitemap.xml <span class="badge feature-badge">ذكي</span></h5>
+                            <div class="drop-zone rounded-3 p-3 text-center cursor-pointer" id="sitemapDropZone">
+                                <p class="mb-1">اسحب وأفلت ملف sitemap.xml هنا أو انقر للاختيار</p>
+                                <small class="opacity-75">سيتم استخراج جميع الروابط تلقائياً</small>
+                                <input type="file" id="sitemapFileInput" accept=".xml" class="d-none">
+                            </div>
+                        </div>
+
+                        <!-- HTML File Analysis Section -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                📄 تحليل ملفات HTML <span class="badge feature-badge">محسن</span>
+                            </label>
+                            <div class="file-drop-zone border border-2 border-dashed rounded-3 p-4 text-center bg-body-secondary cursor-pointer" id="fileDropZone">
+                                <p class="mb-1">اسحب وأفلت ملفات HTML هنا أو انقر للاختيار</p>
+                                <small class="text-muted">سيتم استخراج العنوان والوصف تلقائيًا</small>
+                                <input type="file" id="htmlFileInput" multiple accept=".html,.htm" class="d-none">
+                            </div>
+                            <div class="d-none my-3" id="progressContainer">
+                                <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted" id="progressText">جاري المعالجة...</small>
+                            </div>
+                        </div>
+
+                        <!-- Bulk Import Section -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                📂 استيراد جماعي <span class="badge feature-badge">محسن</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="urlsFileInput" accept=".txt,.json">
+                                <button class="btn btn-outline-primary" onclick="importUrlsFile()">
+                                    📥 استيراد
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">
+                                روابط صفحات موقعك <span class="badge pro-badge">Drag & Drop</span>
+                            </label>
+                            <div class="position-relative">
+                                <textarea class="form-control url-textarea-drop" id="urlInput" rows="6" placeholder="index.html
+about.html
+services.html
+...
+
+💡 يمكنك سحب وإفلات ملفات النصوص هنا!"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="manualInput">
+                            <label class="form-check-label" for="manualInput">
+                                إدخال يدوي للصفحات
+                            </label>
+                        </div>
+                        
+                        <div id="manualInputSection" class="d-none border rounded p-3 mb-3">
+                            <div class="d-grid gap-2">
+                                <input type="text" class="form-control" id="pageTitle" placeholder="عنوان الصفحة">
+                                <input type="text" class="form-control" id="pageUrl" placeholder="رابط الصفحة">
+                                <input type="text" class="form-control" id="pageDescription" placeholder="وصف الصفحة">
+                                <input type="text" class="form-control" id="pageCategory" placeholder="فئة الصفحة">
+                                <input type="text" class="form-control" id="pageTags" placeholder="الكلمات المفتاحية (مفصولة بفواصل)">
+                                <button class="btn btn-success btn-sm" onclick="addManualPage()">إضافة صفحة</button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100" onclick="generateSearchIndex()">
+                            🚀 توليد فهرس البحث
+                        </button>
+                        
+                        <!-- Data Management -->
+                        <div class="mt-3 d-flex gap-2">
+                            <button class="btn btn-outline-success w-100 btn-sm" onclick="saveToLocalStorage()">💾 حفظ</button>
+                            <button class="btn btn-outline-info w-100 btn-sm" onclick="loadFromLocalStorage()">📂 تحميل</button>
+                            <button class="btn btn-outline-danger w-100 btn-sm" onclick="deleteAllData()">🗑️ حذف الكل</button>
+                        </div>
+                        <small class="text-muted d-block mt-1 text-center">البيانات محفوظة محليًا في المتصفح</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h3 class="h5 mb-0">📊 النتائج <span class="badge pro-badge">قابل للتحرير</span></h3>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <!-- Statistics Panel -->
+                        <div id="statsPanel" class="d-none rounded-3 p-3 my-3 text-white" style="background: var(--gradient-sitemap);">
+                            <h6 class="h6">📈 إحصائيات داخلية</h6>
+                            <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-white border-opacity-25"><span>عدد الصفحات:</span><strong id="statPages">0</strong></div>
+                            <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-white border-opacity-25"><span>إجمالي الكلمات المفتاحية:</span><strong id="statKeywords">0</strong></div>
+                            <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-white border-opacity-25"><span>الفئات المختلفة:</span><strong id="statCategories">0</strong></div>
+                            <div class="d-flex justify-content-between align-items-center py-1"><span>أكثر الكلمات تكراراً:</span><strong id="statTopKeyword">-</strong></div>
+                        </div>
+
+                        <!-- Filter Section -->
+                        <div id="filterSection" class="d-none bg-body-secondary border rounded-3 p-3 my-3">
+                            <h6 class="h6 mb-2">🔍 تصفية النتائج</h6>
+                            <div class="input-group">
+                                <select class="form-select" id="categoryFilter"><option value="">جميع الفئات</option></select>
+                                <input type="text" class="form-control" id="keywordFilter" placeholder="بحث بالكلمة المفتاحية">
+                            </div>
+                        </div>
+
+                        <div id="results" class="p-3 border rounded-3 bg-body-secondary overflow-y-auto flex-grow-1" style="min-height: 200px; max-height: 500px;">
+                            <p class="text-muted text-center m-0">أدخل روابط الصفحات أو ارفع الملفات واضغط "توليد فهرس البحث"</p>
+                        </div>
+                        
+                        <!-- Enhanced Export Options -->
+                        <div id="exportButtons" class="d-none d-flex gap-2 flex-wrap mt-3">
+                            <button class="btn btn-success flex-grow-1" onclick="downloadJson()">💾 JSON</button>
+                            <button class="btn btn-info flex-grow-1" onclick="downloadCSV()">📊 CSV</button>
+                            <button class="btn btn-warning flex-grow-1" onclick="downloadZip()">📦 ZIP</button>
+                            <button class="btn btn-secondary flex-grow-1" onclick="toggleCopyOptions()">📋 نسخ</button>
+                        </div>
+
+                        <!-- ZIP Progress -->
+                        <div id="zipProgress" class="d-none mt-2">
+                            <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="zipProgressBar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted" id="zipProgressText">جاري إنشاء ملف ZIP...</small>
+                        </div>
+
+                        <!-- Copy Options -->
+                        <div id="copyOptions" class="d-none mt-2 p-3 bg-body-secondary border rounded-3">
+                            <h6 class="h6">خيارات النسخ:</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="copyToClipboard('all')">📋 نسخ كامل (JSON)</button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="copyToClipboard('titles')">📝 نسخ العناوين فقط</button>
+                                <button class="btn btn-outline-info btn-sm" onclick="copyToClipboard('urls')">🔗 نسخ الروابط فقط</button>
+                                <button class="btn btn-outline-success btn-sm" onclick="copyToClipboard('descriptions')">📄 نسخ الأوصاف فقط</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">📖 تعليمات الاستخدام:</h4>
+                    <ol class="mb-0">
+                        <li><strong>جديد:</strong> أدخل رابط GitHub Pages لجلب وتحليل جميع الصفحات تلقائياً.</li>
+                        <li><strong>جديد:</strong> ارفع ملف robots.txt أو manifest.json لاستخراج مسارات إضافية.</li>
+                        <li><strong>محسن:</strong> ارفع ملف sitemap.xml أو ملفات HTML مباشرة لتحليل ذكي.</li>
+                        <li><strong>محسن:</strong> اسحب وأفلت ملفات النصوص في منطقة الروابط للاستيراد السريع.</li>
+                        <li>اضغط "توليد فهرس البحث" لدمج ومعالجة كل المدخلات.</li>
+                        <li><strong>جديد:</strong> راجع الإحصائيات الفورية واستخدم التصفية للبحث في النتائج.</li>
+                        <li><strong>محسن:</strong> عدّل المحتوى مباشرة في النتائج بالنقر على زر "تحرير".</li>
+                        <li><strong>محسن:</strong> صدّر كـ JSON، CSV، أو حزمة ZIP شاملة.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let searchIndex = [];
+        let manualPages = [];
+        let analyzedFiles = [];
+        let sitemapUrls = [];
+        let robotsUrls = [];
+        let manifestData = {};
+        let githubUrls = [];
+        let filteredResults = [];
+        
+        // Initialize dark mode based on user preference or localStorage
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true' || (localStorage.getItem('darkMode') === null && prefersDark);
+        
+        // Helper to consistently get elements
+        const getEl = (id) => document.getElementById(id);
+
+        function setDarkMode(isDark) {
+            isDarkMode = isDark;
+            localStorage.setItem('darkMode', isDarkMode);
+            document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+            updateDarkModeButton();
+        }
+
+        function toggleDarkMode() {
+            setDarkMode(!isDarkMode);
+            showNotification(isDarkMode ? 'تم تفعيل الوضع الليلي 🌙' : 'تم تفعيل الوضع النهاري ☀️', 'info');
+        }
+        
+        function updateDarkModeButton() {
+            const button = document.querySelector('.dark-mode-toggle');
+            button.innerHTML = isDarkMode ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
+        }
+
+        function updateLiveCounter() {
+            const counter = getEl('liveCounter');
+            if (searchIndex.length > 0) {
+                counter.classList.remove('d-none');
+                getEl('counterValue').textContent = searchIndex.length;
+            } else {
+                counter.classList.add('d-none');
+            }
+        }
+
+        function updateStatistics() {
+            const statsPanel = getEl('statsPanel');
+            
+            if (searchIndex.length === 0) {
+                statsPanel.classList.add('d-none');
+                return;
+            }
+
+            statsPanel.classList.remove('d-none');
+            
+            const allKeywords = searchIndex.flatMap(item => item.tags || []);
+            const uniqueCategories = [...new Set(searchIndex.map(item => item.category))];
+            
+            const keywordCount = allKeywords.reduce((acc, keyword) => {
+                acc[keyword] = (acc[keyword] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const topKeyword = Object.keys(keywordCount).reduce((a, b) => keywordCount[a] > keywordCount[b] ? a : b, '-');
+            
+            getEl('statPages').textContent = searchIndex.length;
+            getEl('statKeywords').textContent = allKeywords.length;
+            getEl('statCategories').textContent = uniqueCategories.length;
+            getEl('statTopKeyword').textContent = topKeyword === '-' ? '-' : `${topKeyword} (${keywordCount[topKeyword]})`;
+        }
+
+        function setupFilters() {
+            getEl('categoryFilter').addEventListener('change', applyFilters);
+            getEl('keywordFilter').addEventListener('input', applyFilters);
+        }
+
+        function updateFilterOptions() {
+            const categoryFilter = getEl('categoryFilter');
+            const categories = [...new Set(searchIndex.map(item => item.category))].sort();
+            
+            categoryFilter.innerHTML = '<option value="">جميع الفئات</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        function applyFilters() {
+            const categoryFilterValue = getEl('categoryFilter').value;
+            const keywordFilterValue = getEl('keywordFilter').value.toLowerCase();
+            
+            filteredResults = searchIndex.filter(item => {
+                const matchesCategory = !categoryFilterValue || item.category === categoryFilterValue;
+                const matchesKeyword = !keywordFilterValue || 
+                    item.title.toLowerCase().includes(keywordFilterValue) ||
+                    item.description.toLowerCase().includes(keywordFilterValue) ||
+                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(keywordFilterValue)));
+                
+                return matchesCategory && matchesKeyword;
+            });
+            
+            displayResults(filteredResults);
+        }
+
+        function deleteAllData() {
+            if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                searchIndex = [];
+                manualPages = [];
+                analyzedFiles = [];
+                sitemapUrls = [];
+                robotsUrls = [];
+                manifestData = {};
+                githubUrls = [];
+                filteredResults = [];
+                
+                getEl('urlInput').value = '';
+                getEl('results').innerHTML = '<p class="text-muted text-center m-0">تم حذف جميع البيانات</p>';
+                getEl('exportButtons').classList.add('d-none');
+                getEl('statsPanel').classList.add('d-none');
+                getEl('filterSection').classList.add('d-none');
+                
+                updateLiveCounter();
+                localStorage.removeItem('searchIndexGenerator');
+                
+                showNotification('تم حذف جميع البيانات بنجاح! 🗑️', 'success');
+            }
+        }
+        
+        // --- All other JavaScript functions (fetchFromGitHub, processRobotsFile, etc.) remain largely the same in logic ---
+        // The key changes are in toggling visibility using classList instead of style.display
+        
+        // Example of a refactored function part:
+        async function processHtmlFiles(files) {
+            const progressContainer = getEl('progressContainer');
+            const progressBar = getEl('progressBar');
+            const progressText = getEl('progressText');
+            
+            progressContainer.classList.remove('d-none');
+            // ... rest of the logic
+            
+            // At the end
+            progressContainer.classList.add('d-none');
+        }
+
+        function toggleCopyOptions() {
+            getEl('copyOptions').classList.toggle('d-none');
+        }
+
+        // --- Window load and initial setup ---
+        window.addEventListener('load', function() {
+            setDarkMode(isDarkMode);
+            loadFromLocalStorage();
+
+            const setupDragDrop = (dropZoneId, fileInputId, fileTypeRegex, processFunction) => {
+                const dropZone = getEl(dropZoneId);
+                const fileInput = getEl(fileInputId);
+                
+                if (!dropZone || !fileInput) return;
+
+                dropZone.addEventListener('click', () => fileInput.click());
+                dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+                dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    const files = Array.from(e.dataTransfer.files).filter(file => fileTypeRegex.test(file.type) || fileTypeRegex.test(file.name));
+                    if (files.length > 0) processFunction(files.length > 1 ? files : files[0]);
+                });
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) processFunction(fileInput.multiple ? Array.from(e.target.files) : e.target.files[0]);
+                });
+            };
+            
+            setupDragDrop('robotsDropZone', 'robotsFileInput', /\.txt$/, processRobotsFile);
+            setupDragDrop('manifestDropZone', 'manifestFileInput', /\.json$/, processManifestFile);
+            setupDragDrop('sitemapDropZone', 'sitemapFileInput', /\.xml$/, processSitemapFile);
+            setupDragDrop('fileDropZone', 'htmlFileInput', /\.html?$/, processHtmlFiles);
+            
+            setupTextareaDragDrop();
+            setupFilters();
+        });
+
+        // The rest of your existing JavaScript logic can be pasted here.
+        // Make sure to replace all instances of:
+        // element.style.display = 'block' -> element.classList.remove('d-none')
+        // element.style.display = 'flex'  -> element.classList.remove('d-none') (assuming d-flex is on the element)
+        // element.style.display = 'none'  -> element.classList.add('d-none')
+        
+        // (Full JS from original file, adapted for classList toggling)
+        async function fetchFromGitHub() {
+            const githubUrl = getEl('githubUrl').value.trim();
+            if (!githubUrl) { return showNotification('يرجى إدخال رابط GitHub Pages صالح', 'warning'); }
+            
+            try {
+                showNotification('جاري جلب البيانات من GitHub Pages...', 'info');
+                const response = await fetch(githubUrl);
+                const html = await response.text();
+                
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const links = [...new Set(Array.from(doc.querySelectorAll('a[href]'))
+                    .map(a => a.getAttribute('href'))
+                    .filter(href => href && href.endsWith('.html') && !href.startsWith('http'))
+                    .map(href => new URL(href, githubUrl).pathname))];
+                
+                if (links.length > 0) {
+                    githubUrls.push(...links);
+                    const urlInput = getEl('urlInput');
+                    urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + links.join('\n');
+                    showNotification(`تم جلب ${links.length} رابط من GitHub Pages! 🐙`, 'success');
+                    autoSave();
+                } else {
+                    showNotification('لم يتم العثور على روابط HTML في الصفحة', 'warning');
+                }
+            } catch (error) {
+                showNotification('خطأ في جلب البيانات من GitHub: ' + error.message, 'danger');
+            }
+        }
+        async function processRobotsFile(file) {
+            try {
+                const content = await readFileContent(file);
+                const lines = content.split('\n').map(l => l.trim());
+                const newRobotsUrls = lines.filter(l => l.toLowerCase().startsWith('disallow:') || l.toLowerCase().startsWith('allow:')).map(l => l.split(':')[1]?.trim()).filter(Boolean);
+                if (newRobotsUrls.length > 0) {
+                    robotsUrls.push(...newRobotsUrls);
+                    const urlInput = getEl('urlInput');
+                    urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + newRobotsUrls.join('\n');
+                    showNotification(`تم استخراج ${newRobotsUrls.length} مسار جديد من robots.txt! 🤖`, 'success');
+                    autoSave();
+                } else {
+                    showNotification('لم يتم العثور على مسارات جديدة في ملف robots.txt', 'warning');
+                }
+            } catch (error) { showNotification('خطأ في معالجة ملف robots.txt: ' + error.message, 'danger'); }
+        }
+        async function processManifestFile(file) {
+            try {
+                manifestData = JSON.parse(await readFileContent(file));
+                const extractedUrls = [
+                    ...(manifestData.icons?.map(i => i.src) || []),
+                    ...(manifestData.screenshots?.map(s => s.src) || []),
+                    manifestData.start_url,
+                    ...(manifestData.shortcuts?.map(s => s.url) || [])
+                ].filter(Boolean);
+                if (extractedUrls.length > 0) {
+                    const urlInput = getEl('urlInput');
+                    urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + extractedUrls.join('\n');
+                    showNotification(`تم استخراج ${extractedUrls.length} مسار من manifest.json! 📱`, 'success');
+                    autoSave();
+                } else {
+                    showNotification('لم يتم العثور على مسارات صالحة في ملف manifest.json', 'warning');
+                }
+            } catch (error) { showNotification('خطأ في معالجة ملف manifest.json: ' + error.message, 'danger'); }
+        }
+        function setupTextareaDragDrop() {
+            const textarea = getEl('urlInput');
+            textarea.addEventListener('dragover', (e) => { e.preventDefault(); textarea.classList.add('dragover'); });
+            textarea.addEventListener('dragleave', () => textarea.classList.remove('dragover'));
+            textarea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                textarea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files).filter(file => /\.txt|\.json$/.test(file.name));
+                if (files.length > 0) processDroppedTextFiles(files);
+            });
+        }
+        async function processDroppedTextFiles(files) {
+            for (const file of files) {
+                try {
+                    const content = await readFileContent(file);
+                    let urls = file.name.endsWith('.json') ? (JSON.parse(content).urls || JSON.parse(content)) : content.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+                    if (urls.length > 0) {
+                        const urlInput = getEl('urlInput');
+                        urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + urls.join('\n');
+                        showNotification(`تم إضافة ${urls.length} رابط من ${file.name}! 📥`, 'success');
+                        autoSave();
+                    }
+                } catch (error) { showNotification(`خطأ في معالجة ${file.name}: ${error.message}`, 'danger'); }
+            }
+        }
+        function autoSave() { saveToLocalStorage(); }
+        function saveToLocalStorage() {
+            const data = { searchIndex, manualPages, analyzedFiles, sitemapUrls, robotsUrls, manifestData, githubUrls, urlInput: getEl('urlInput').value, timestamp: new Date().toISOString() };
+            try {
+                localStorage.setItem('searchIndexGenerator', JSON.stringify(data));
+            } catch (error) { showNotification('خطأ في حفظ البيانات: ' + error.message, 'danger'); }
+        }
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('searchIndexGenerator');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    Object.assign(window, { searchIndex: data.searchIndex || [], manualPages: data.manualPages || [], analyzedFiles: data.analyzedFiles || [], sitemapUrls: data.sitemapUrls || [], robotsUrls: data.robotsUrls || [], manifestData: data.manifestData || {}, githubUrls: data.githubUrls || [] });
+                    if (data.urlInput) getEl('urlInput').value = data.urlInput;
+                    if (searchIndex.length > 0) {
+                        displayResults();
+                        updateStatistics();
+                        updateLiveCounter();
+                        updateFilterOptions();
+                        getEl('filterSection').classList.remove('d-none');
+                    }
+                    showNotification('تم تحميل البيانات المحفوظة! 📂', 'info');
+                }
+            } catch (error) { showNotification('خطأ في تحميل البيانات: ' + error.message, 'warning'); }
+        }
+        function showNotification(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            const typeMapping = { 'info': 'bg-info', 'success': 'bg-success', 'warning': 'bg-warning', 'danger': 'bg-danger' };
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `toast ${typeMapping[type]} text-white`;
+            toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
+            toastContainer.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
+            bsToast.show();
+            toast.addEventListener('hidden.bs.toast', () => toast.remove());
+        }
+        async function processSitemapFile(file) {
+            try {
+                const content = await readFileContent(file);
+                const xmlDoc = new DOMParser().parseFromString(content, 'text/xml');
+                if (xmlDoc.querySelector('parsererror')) throw new Error('خطأ في تحليل ملف XML');
+                const newSitemapUrls = [...xmlDoc.querySelectorAll('url > loc, sitemap > loc')].map(el => {
+                    try { return new URL(el.textContent.trim()).pathname; } catch { return el.textContent.trim(); }
+                }).filter(Boolean);
+                if (newSitemapUrls.length > 0) {
+                    sitemapUrls.push(...newSitemapUrls);
+                    const urlInput = getEl('urlInput');
+                    urlInput.value = (urlInput.value ? urlInput.value + '\n' : '') + newSitemapUrls.join('\n');
+                    showNotification(`تم استخراج ${newSitemapUrls.length} رابط جديد من Sitemap! 🗺️`, 'success');
+                    autoSave();
+                } else { showNotification('لم يتم العثور على روابط جديدة في ملف Sitemap', 'warning'); }
+            } catch (error) { showNotification('خطأ في معالجة ملف Sitemap: ' + error.message, 'danger'); }
+        }
+        async function processHtmlFiles(files) {
+            const progressContainer = getEl('progressContainer');
+            const progressBar = getEl('progressBar');
+            const progressText = getEl('progressText');
+            progressContainer.classList.remove('d-none');
+            const newAnalyzedFiles = [];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                progressBar.style.width = `${((i + 1) / files.length) * 100}%`;
+                progressText.textContent = `معالجة ${file.name} (${i + 1}/${files.length})`;
+                if (!analyzedFiles.find(f => f.filename === file.name)) {
+                    try {
+                        const analysis = analyzeHtmlContent(await readFileContent(file), file.name);
+                        analyzedFiles.push(analysis);
+                        newAnalyzedFiles.push(analysis);
+                    } catch (error) { console.error('Error processing file:', file.name, error); }
+                }
+                await new Promise(r => setTimeout(r, 50));
+            }
+            progressContainer.classList.add('d-none');
+            if (newAnalyzedFiles.length > 0) { showNotification(`تم تحليل ${newAnalyzedFiles.length} ملف HTML جديد! إجمالي: ${analyzedFiles.length} 🎉`, 'success'); }
+            else { showNotification('جميع الملفات تم تحليلها مسبقاً', 'info'); }
+            autoSave();
+        }
+        function readFileContent(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = e => resolve(e.target.result); reader.onerror = reject; reader.readAsText(file, 'UTF-8'); }); }
+        function analyzeHtmlContent(content, filename) {
+            const doc = new DOMParser().parseFromString(content, 'text/html');
+            let title = doc.querySelector('title')?.textContent.trim() || filename.replace(/\.(html?|htm)$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            let description = doc.querySelector('meta[name="description"]')?.getAttribute('content') || doc.querySelector('meta[property="og:description"]')?.getAttribute('content') || doc.querySelector('article p, main p')?.textContent.trim().substring(0, 200) + '...' || `صفحة ${title}`;
+            let keywords = doc.querySelector('meta[name="keywords"]')?.getAttribute('content').split(',').map(k => k.trim()).filter(Boolean) || [];
+            let headings = [...doc.querySelectorAll('h1, h2, h3')].map(h => h.textContent.trim()).filter(Boolean);
+            return { filename, title, description, keywords, headings, url: '/' + filename, content };
+        }
+        function extractTagsFromUrl(url) {
+            const pathParts = url.split('/').filter(p => p && p !== '');
+            const tags = pathParts.flatMap(part => part.replace(/\.[^/.]+$/, '').split(/[-_\s]+/)).filter(p => p.length > 2).map(p => p.toLowerCase());
+            const translations = { 'index': 'الرئيسية', 'home': 'الرئيسية', 'about': 'من نحن', 'contact': 'اتصل بنا', 'services': 'خدمات', 'products': 'منتجات', 'blog': 'مدونة', 'news': 'أخبار', 'portfolio': 'أعمال', 'team': 'فريق', 'pricing': 'أسعار', 'faq': 'أسئلة شائعة' };
+            tags.forEach(tag => { if (translations[tag]) tags.push(translations[tag]); });
+            return [...new Set(tags)];
+        }
+        function importUrlsFile() {
+            const file = getEl('urlsFileInput').files[0];
+            if (!file) { return alert('يرجى اختيار ملف أولاً'); }
+            processDroppedTextFiles([file]);
+        }
+        getEl('manualInput').addEventListener('change', function() { getEl('manualInputSection').classList.toggle('d-none', !this.checked); });
+        function addManualPage() {
+            const [title, url, description, category, tagsValue] = ['pageTitle', 'pageUrl', 'pageDescription', 'pageCategory', 'pageTags'].map(id => getEl(id).value);
+            if (!title || !url) return alert('يرجى إدخال العنوان والرابط على الأقل');
+            manualPages.push({ title, url: url.startsWith('/') ? url : '/' + url, description, category: category || 'عام', tags: tagsValue.split(',').map(t => t.trim()).filter(Boolean) });
+            ['pageTitle', 'pageUrl', 'pageDescription', 'pageCategory', 'pageTags'].forEach(id => getEl(id).value = '');
+            showNotification(`تم إضافة: ${title}`, 'success');
+            autoSave();
+        }
+        function generateSearchIndex() {
+            let idCounter = searchIndex.length > 0 ? Math.max(...searchIndex.map(item => item.id)) + 1 : 1;
+            let newItemsCount = 0;
+            const existingUrls = new Set(searchIndex.map(item => item.url));
+
+            const addItem = (item) => {
+                if (!existingUrls.has(item.url)) {
+                    item.id = idCounter++;
+                    searchIndex.push(item);
+                    existingUrls.add(item.url);
+                    newItemsCount++;
+                }
+            };
+            analyzedFiles.forEach(file => addItem({ title: file.title, description: file.description, url: file.url, category: 'تحليل تلقائي', tags: file.keywords.length > 0 ? file.keywords : extractTagsFromUrl(file.url), source: 'html_analysis', content: file.content }));
+            if (getEl('manualInput').checked) { manualPages.forEach(page => addItem({ ...page, source: 'manual' })); }
+            
+            getEl('urlInput').value.trim().split('\n').filter(Boolean).forEach(urlStr => {
+                const url = urlStr.trim().startsWith('/') ? urlStr.trim() : '/' + urlStr.trim();
+                if (existingUrls.has(url)) return;
+
+                const fileName = url.split('/').pop().replace('.html', '');
+                const pathParts = url.split('/').filter(Boolean);
+                const category = pathParts.length > 1 ? pathParts[0] : 'عام';
+                const titleMap = { 'index': 'الصفحة الرئيسية', 'about': 'من نحن', 'contact': 'اتصل بنا', 'services': 'خدماتنا', 'blog': 'المدونة' };
+                let title = titleMap[fileName.toLowerCase()] || (fileName.charAt(0).toUpperCase() + fileName.slice(1).replace(/[-_]/g, ' '));
+                let source = sitemapUrls.includes(url) ? 'sitemap' : robotsUrls.includes(url) ? 'robots' : githubUrls.includes(url) ? 'github' : 'url_generation';
+                
+                addItem({ title, description: `صفحة ${title}`, url, category: category.charAt(0).toUpperCase() + category.slice(1), tags: extractTagsFromUrl(url), source });
+            });
+
+            if (searchIndex.length === 0) return alert('يرجى إدخال بيانات أولاً');
+            showNotification(newItemsCount > 0 ? `تم إضافة ${newItemsCount} عنصر جديد! الإجمالي: ${searchIndex.length}` : 'لا توجد عناصر جديدة للإضافة', newItemsCount > 0 ? 'success' : 'info');
+            
+            displayResults();
+            updateStatistics();
+            updateLiveCounter();
+            updateFilterOptions();
+            getEl('filterSection').classList.remove('d-none');
+            autoSave();
+        }
+        function displayResults(resultsToShow = null) {
+            const resultsDiv = getEl('results');
+            const results = resultsToShow || searchIndex;
+            if (results.length === 0) { resultsDiv.innerHTML = '<p class="text-danger">لا توجد صفحات للمعالجة</p>'; return; }
+            const grouped = results.reduce((acc, item) => { (acc[item.source || 'unknown'] = acc[item.source || 'unknown'] || []).push(item); return acc; }, {});
+            const sourceLabels = { 'html_analysis': '📄 تحليل HTML', 'manual': '✏️ إدخال يدوي', 'url_generation': '🔗 من الروابط', 'sitemap': '🗺️ من Sitemap', 'robots': '🤖 من robots.txt', 'github': '🐙 من GitHub' };
+            resultsDiv.innerHTML = `<h5>تم توليد ${results.length} عنصر:</h5>` + Object.entries(grouped).map(([source, items]) => `
+                <h6 class="mt-3 text-primary">${sourceLabels[source] || source} (${items.length})</h6>
+                ${items.map(item => `
+                <div class="position-relative bg-body border rounded-2 p-3 my-2" data-id="${item.id}">
+                    <button class="btn btn-outline-secondary btn-sm position-absolute top-0 start-0 m-2" onclick="toggleEdit(${item.id})">تحرير</button>
+                    <div class="page-title editable-content text-primary fw-bold mb-1" data-field="title">${item.title}</div>
+                    <div class="text-body-secondary small">${item.url}</div>
+                    <div class="text-muted editable-content mt-1" data-field="description">${item.description}</div>
+                    <div class="mt-2 small"><span class="text-info">الفئة:</span> <span class="editable-content" data-field="category">${item.category}</span></div>
+                    <div class="mt-1 small"><span class="text-success">الكلمات:</span> <span class="editable-content" data-field="tags">${(item.tags || []).join(', ')}</span></div>
+                </div>`).join('')}`
+            ).join('');
+            getEl('exportButtons').classList.remove('d-none');
+        }
+        function toggleEdit(itemId) {
+            const pageItem = document.querySelector(`[data-id="${itemId}"]`);
+            const editBtn = pageItem.querySelector('button');
+            const isEditing = editBtn.textContent === 'حفظ';
+            pageItem.querySelectorAll('.editable-content').forEach(el => el.setAttribute('contenteditable', !isEditing));
+            editBtn.textContent = isEditing ? 'تحرير' : 'حفظ';
+            editBtn.classList.toggle('btn-outline-secondary', isEditing);
+            editBtn.classList.toggle('btn-success', !isEditing);
+            if (isEditing) {
+                const item = searchIndex.find(i => i.id === itemId);
+                pageItem.querySelectorAll('.editable-content').forEach(el => {
+                    const field = el.dataset.field;
+                    const value = el.textContent.trim();
+                    item[field] = field === 'tags' ? value.split(',').map(t => t.trim()).filter(Boolean) : value;
+                });
+                showNotification('تم حفظ التعديلات! ✅', 'success');
+                updateStatistics();
+                autoSave();
+            }
+        }
+        const downloadFile = (blob, filename) => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href); };
+        const getStrippedIndex = () => searchIndex.map(({ id, title, description, url, category, tags }) => ({ id, title, description, url, category, tags }));
+        function downloadJson() { downloadFile(new Blob([JSON.stringify(getStrippedIndex(), null, 2)], { type: 'application/json' }), 'search-index.json'); showNotification('تم تحميل JSON ✅', 'success'); }
+        function downloadCSV() {
+            const csv = ['ID,العنوان,الرابط,الوصف,الفئة,الكلمات المفتاحية', ...searchIndex.map(i => [`"${i.id}"`, `"${i.title.replace(/"/g, '""')}"`, `"${i.url}"`, `"${i.description.replace(/"/g, '""')}"`, `"${i.category}"`, `"${(i.tags || []).join(', ')}"`].join(','))].join('\n');
+            downloadFile(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }), 'search-index.csv');
+            showNotification('تم تحميل CSV 📊', 'success');
+        }
+        async function downloadZip() {
+            const zipProgress = getEl('zipProgress');
+            const zipProgressBar = getEl('zipProgressBar');
+            zipProgress.classList.remove('d-none');
+            try {
+                const zip = new JSZip();
+                zip.file('search-index.json', JSON.stringify(getStrippedIndex(), null, 2));
+                const htmlFiles = analyzedFiles.filter(f => f.content);
+                if (htmlFiles.length > 0) {
+                    const htmlFolder = zip.folder('html-files');
+                    htmlFiles.forEach(f => htmlFolder.file(f.filename, f.content));
+                }
+                const content = await zip.generateAsync({ type: 'blob' }, (metadata) => { zipProgressBar.style.width = metadata.percent.toFixed(2) + '%'; });
+                downloadFile(content, 'search-index-package.zip');
+                showNotification('تم تحميل ZIP 📦', 'success');
+            } catch (error) { showNotification('خطأ في إنشاء ZIP: ' + error.message, 'danger'); }
+            finally { setTimeout(() => zipProgress.classList.add('d-none'), 2000); }
+        }
+        function copyToClipboard(type) {
+            const dataMap = {
+                all: () => JSON.stringify(getStrippedIndex(), null, 2),
+                titles: () => searchIndex.map(item => item.title).join('\n'),
+                urls: () => searchIndex.map(item => item.url).join('\n'),
+                descriptions: () => searchIndex.map(item => item.description).join('\n')
+            };
+            const content = dataMap[type]();
+            navigator.clipboard.writeText(content).then(() => {
+                showNotification(`تم نسخ ${type} إلى الحافظة! 📋`, 'success');
+                getEl('copyOptions').classList.add('d-none');
+            }).catch(err => showNotification('فشل النسخ!', 'danger'));
+        }
+        getEl('urlInput').addEventListener('input', autoSave);
+    </script>
+</body>
+</html>
